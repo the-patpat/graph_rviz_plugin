@@ -1,5 +1,9 @@
 [![Institut Maupertuis logo](http://www.institutmaupertuis.fr/media/gabarit/logo.png)](http://www.institutmaupertuis.fr)
 
+This project uses [QCustomPlot](https://www.qcustomplot.com/)
+
+![QCustomPlot logo](https://www.qcustomplot.com/qcp-logo.png)
+
 # Overview
 This package contains two Qt RViz panels that allows users to draw graphs of topics values dynamically (line graph) and to visualise image histograms.
 
