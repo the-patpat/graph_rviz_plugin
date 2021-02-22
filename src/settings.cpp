@@ -110,15 +110,15 @@ legend_enable, double y_min, double y_max, double w_time, double
   x_axis_groupbox->setLayout(x_axis_layout);
   main_layout->addWidget(x_axis_groupbox);
 
-  connect(y_axis_autoscale, SIGNAL(toggled(bool)), SLOT(yAxisAutoscale(bool)));
-  connect(x_axis_window_time_button, SIGNAL(toggled(bool)), SLOT(xAxisWindowTime(bool)));
+  connect(y_axis_autoscale, &QCheckBox::toggled, this, &Settings::yAxisAutoscale);
+  connect(x_axis_window_time_button, &QCheckBox::toggled, this, &Settings::xAxisWindowTime);
   QDialogButtonBox *button_box = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   main_layout->addWidget(button_box);
 
   connect(button_box, &QDialogButtonBox::accepted, this, &Settings::okClicked);
   connect(button_box, &QDialogButtonBox::rejected, this, &QDialog::reject);
-  connect(y_min_double_spin_box_, SIGNAL(valueChanged(double)), this, SLOT(yMinChanged(double)));
-  connect(y_max_double_spin_box_, SIGNAL(valueChanged(double)), this, SLOT(yMaxChanged(double)));
+  connect(y_min_double_spin_box_, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &Settings::yMinChanged);
+  connect(y_max_double_spin_box_, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &Settings::yMaxChanged);
 }
 
 Settings::~Settings()
