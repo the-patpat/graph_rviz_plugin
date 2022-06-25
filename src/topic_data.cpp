@@ -49,6 +49,9 @@ void TopicData::startRefreshData()
     sub_ = nh_->subscribe(topic_name_, 1, &TopicData::uint32Callback, this);
   else if (topic_type_ == "std_msgs/UInt64")
     sub_ = nh_->subscribe(topic_name_, 1, &TopicData::uint64Callback, this);
+  else if (topic_type_ == "geometry_msgs/Point")
+    //TODO to be implemented
+    sub_ = nh_->subscribe(topic_name_, 1, &TopicData::pointCallback, this);
   else
   {
     ROS_ERROR_STREAM("Could not find callback for topic type " << topic_type_);
@@ -83,6 +86,24 @@ void TopicData::pushData(const double data, const ros::Time now)
                              QMessageBox::Icon::Critical);
     sub_.shutdown();
   }
+}
+
+void TopicData::pushData(const QVector<double> data, const ros::Time now)
+{
+  double time = (now.toSec() - begin_.toSec());
+
+    try
+    {
+      topic_time_.push_back(time);
+      topic_scatter_data_.push_back(data);
+    }
+    catch (const std::exception &e)
+    {
+      ROS_WARN_STREAM("Memory full, acquisition stop");
+      Q_EMIT displayMessageBox("Fatal Error", "Memory is full, acquisition is stopped.", "",
+                              QMessageBox::Icon::Critical);
+      sub_.shutdown();
+    }
 }
 
 void TopicData::boolCallback(const std_msgs::BoolConstPtr &msg)
@@ -189,10 +210,24 @@ void TopicData::uint64Callback(const std_msgs::UInt64ConstPtr &msg)
   data_update_ = true;
 }
 
+void TopicData::pointCallback(const geometry_msgs::PointPtr &msg)
+{
+  std::lock_guard<std::mutex> guard(data_mutex_);
+  const QVector<double> data = {msg->x, msg->y};
+  pushData(data, ros::Time::now());
+  data_update_ = true;
+}
+
 QVector<double> TopicData::getTopicData()
 {
   std::lock_guard<std::mutex> guard(data_mutex_);
   return topic_data_;
+}
+
+QVector<QVector<double> > TopicData::getTopicScatterData()
+{
+  std::lock_guard<std::mutex> guard(data_mutex_);
+  return topic_scatter_data_;
 }
 
 QVector<double> TopicData::getTopicTime()

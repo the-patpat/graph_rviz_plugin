@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QObject>
 #include <QVector>
+#include <QPointF>
 #include <ros/ros.h>
 #include <ros/time.h>
 #include <sensor_msgs/Image.h>
@@ -25,6 +26,7 @@
 #include <std_msgs/UInt32.h>
 #include <std_msgs/UInt64.h>
 #include <std_msgs/UInt8.h>
+#include <geometry_msgs/Point.h>
 
 namespace graph_rviz_plugin
 {
@@ -49,8 +51,10 @@ public:
   QCPGraph::LineStyle line_style_ = QCPGraph::lsLine;
   QCPScatterStyle::ScatterShape scatter_shape_ = QCPScatterStyle::ssCross;
   QVector<double> topic_data_;
+  QVector<QVector<double>> topic_scatter_data_;
   QVector<double> topic_time_;
   QVector<double> getTopicData();
+  QVector<QVector<double> > getTopicScatterData();
   QVector<double> getTopicTime();
   void startRefreshData();
   void stopRefreshData();
@@ -86,7 +90,9 @@ private:
   void uint16Callback(const std_msgs::UInt16ConstPtr &msg);
   void uint32Callback(const std_msgs::UInt32ConstPtr &msg);
   void uint64Callback(const std_msgs::UInt64ConstPtr &msg);
+  void pointCallback(const geometry_msgs::PointPtr &msg);
   void pushData(const double Data, const ros::Time now);
+  void pushData(const QVector<double> Data, const ros::Time now);
 };
 
 }
