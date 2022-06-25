@@ -23,6 +23,7 @@ set(
   PROJECT_QT_PANELS_TARGETS
   ${PROJECT_NAME}_line
   ${PROJECT_NAME}_histogram
+  ${PROJECT_NAME}_scatter
 )
 
 set(
@@ -206,6 +207,34 @@ target_link_libraries(
 )
 add_dependencies(
   ${PROJECT_NAME}_histogram
+  ${PROJECT_NAME}_graph_settings
+  ${PROJECT_NAME}_qcustomplot
+  ${PROJECT_NAME}_selection_topics
+  ${PROJECT_NAME}_settings
+  ${PROJECT_NAME}_topics_data
+  ${PROJECT_NAME}_topic_color
+  ${catkin_EXPORTED_TARGETS}
+)
+
+## Qt panel
+add_library(
+  ${PROJECT_NAME}_scatter
+  include/${PROJECT_NAME}/scatter_panel.hpp
+  src/scatter_panel.cpp
+)
+target_link_libraries(
+  ${PROJECT_NAME}_scatter
+  ${PROJECT_NAME}_graph_settings
+  ${PROJECT_NAME}_qcustomplot
+  ${PROJECT_NAME}_selection_topics
+  ${PROJECT_NAME}_settings
+  ${PROJECT_NAME}_topics_data
+  ${PROJECT_NAME}_topic_color
+  Qt5::Widgets
+  ${catkin_LIBRARIES}
+)
+add_dependencies(
+  ${PROJECT_NAME}_scatter
   ${PROJECT_NAME}_graph_settings
   ${PROJECT_NAME}_qcustomplot
   ${PROJECT_NAME}_selection_topics
